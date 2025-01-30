@@ -1,6 +1,6 @@
-// app/hooks/useGPS.ts
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import throttle from "lodash.throttle";
 
 interface Position {
   lat: number;
@@ -9,27 +9,41 @@ interface Position {
 
 const useGPS = () => {
   const [position, setPosition] = useState<Position | null>(null);
+  const [path, setPath] = useState<Position[]>([]);
+
+  const updatePosition = useCallback(
+    throttle((newPosition: Position) => {
+      setPosition(newPosition);
+      console.log("newPosition", newPosition);
+      setPath((prevPath) => [...prevPath, newPosition]);
+    }, 1000),
+    []
+  );
 
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (typeof window !== "undefined" && navigator.geolocation) {
       const watchId = navigator.geolocation.watchPosition(
-        (position) => {
-          setPosition({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
+        (pos) => {
+          const newPosition = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          };
+          updatePosition(newPosition);
         },
         (error) => {
           console.error("Error fetching position", error);
         },
-        { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+        { enableHighAccuracy: true }
       );
 
-      return () => navigator.geolocation.clearWatch(watchId);
+      return () => {
+        navigator.geolocation.clearWatch(watchId);
+        updatePosition.cancel();
+      };
     }
-  }, []);
+  }, [updatePosition]);
 
-  return position;
+  return { position, path };
 };
 
 export default useGPS;
