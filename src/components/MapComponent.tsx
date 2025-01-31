@@ -7,12 +7,13 @@ import {
   Polyline,
   Marker,
 } from "@react-google-maps/api";
+import { Position } from "@/hooks/use-GPS";
 
 const seoulCenter = { lat: 37.5665, lng: 126.978 };
 
 interface MapComponentProps {
-  position: { lat: number; lng: number } | null;
-  path: { lat: number; lng: number }[];
+  position: Position | null;
+  path: Position[];
   imageContainerRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -34,11 +35,14 @@ export default function MapComponent({
   }, [isLoaded, map, position]);
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <div className="relative w-full h-full rounded-lg bg-[#f6f3f3]" />;
   }
 
   return (
-    <div className="relative w-full h-full" ref={imageContainerRef}>
+    <div
+      className="relative w-full h-full bg-[#f6f3f3]"
+      ref={imageContainerRef}
+    >
       <GoogleMap
         center={position || seoulCenter}
         zoom={15}

@@ -4,39 +4,36 @@ import { Navigation2, RotateCcw, ArrowDownToLine, Logs } from "lucide-react";
 import MapComponent from "./MapComponent";
 import useGPS from "@/hooks/use-GPS";
 import useImageSaver from "@/hooks/use-image-saver";
+import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
 
+interface SavedImage {
+  id: string;
+  imageUrl: string;
+}
+
 const GPSDrawingApp = () => {
-  const { position, path } = useGPS();
+  const { position, path, resetPath } = useGPS();
   const isGPSActive = position !== null;
   const [isRecording, setIsRecording] = useState(false);
 
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const { saveImageLocally, sendImageToServer } = useImageSaver({
+  const { handleSaveImage, isSaving, saveImageLocally } = useImageSaver({
     imageContainerRef,
   });
+
+  const [savedImages, setSavedImages] = useState<SavedImage[]>([]);
 
   const totalDistance = 0;
   const totalPoints = path.length; // 경로의 점 개수
   const totalTime = 0;
 
-  const handleFinishDrawing = () => {
-    try {
-      saveImageLocally();
-      sendImageToServer();
-      toast({
-        title: "저장 이미지",
-        description: "이미지가 저장 되었습니다",
-        duration: 2000,
-      });
-    } catch (error) {
-      console.error("Error saving image", error);
-      toast({
-        title: "저장 실패",
-        description: "뭔가가 뭔가 실패했습니다",
-        duration: 2000,
-        variant: "destructive",
-      });
+  const handleSaveButtonClick = async () => {
+    const result = await handleSaveImage();
+    console.log(result);
+    if (result.ok) {
+      const { imageUrl, id } = result.data as SavedImage;
+      setSavedImages((prev) => [...prev, { id, imageUrl }]);
     }
   };
 
@@ -84,17 +81,67 @@ const GPSDrawingApp = () => {
         {/* Stats Row */}
         <div className="flex justify-between">
           {/* Time */}
-          <div className="text-center">
+          <div className="text-center flex flex-col items-center min-w-20">
             <div className="w-12 h-12 rounded-full bg-dark-button flex items-center justify-center mb-1 shadow-button">
-              <span className="text-stats">{totalTime}</span>
+              <span
+                className={`text-stats ${
+                  totalTime > 0 ? "text-status-success" : ""
+                }`}
+              >
+                {totalTime}
+              </span>
             </div>
             <span className="text-text-secondary text-label">MIN</span>
           </div>
 
-          {/* Points */}
-          <div className="text-center">
+          {/* Saved Images Draw Toggle */}
+          <div className="text-center flex flex-col items-center min-w-20 relative">
             <div className="w-12 h-12 rounded-full bg-dark-button flex items-center justify-center mb-1 shadow-button">
-              <span className="text-stats">{totalPoints}</span>
+              <span
+                className={`text-stats ${
+                  savedImages.length > 0 ? "text-status-success" : ""
+                }`}
+              >
+                {savedImages.length}
+              </span>
+            </div>
+            <span className="text-text-secondary text-label">IMAGES</span>
+
+            {/* saved images */}
+            {savedImages.length > 0 && (
+              <div className="absolute w-[96vw] left-1/2 -translate-x-1/2 -top-[100%] -mt-4 bg-dark-button bg-opacity-90 px-6 py-2 rounded-2xl shadow-float z-50">
+                <h2 className="text-xs font-semibold">Drawings</h2>
+                <ul className="flex gap-2">
+                  {savedImages.map(({ id, imageUrl }) => (
+                    <li
+                      key={id}
+                      className="h-10 w-10 relative bg-text-secondary rounded-md overflow-hidden cursor-pointer"
+                      onClick={() => saveImageLocally(imageUrl)}
+                    >
+                      <Image
+                        src={imageUrl}
+                        alt="saved-image"
+                        fill
+                        sizes="100px"
+                        quality={80}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Points */}
+          <div className="text-center flex flex-col items-center min-w-20">
+            <div className="w-12 h-12 rounded-full bg-dark-button flex items-center justify-center mb-1 shadow-button">
+              <span
+                className={`text-stats ${
+                  totalPoints > 0 ? "text-status-success" : ""
+                }`}
+              >
+                {totalPoints}
+              </span>
             </div>
             <span className="text-text-secondary text-label">POINTS</span>
           </div>
@@ -103,7 +150,22 @@ const GPSDrawingApp = () => {
         {/* Control Buttons */}
         <div className="flex justify-between items-center px-4">
           {/* Reset Button */}
-          <button className="w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors">
+          <button
+            className={`w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors
+            ${!path.length ? "opacity-50" : ""}`}
+            onClick={() => {
+              if (path.length) {
+                resetPath();
+                toast({
+                  title: "Reset Path",
+                  description: "Path has been reset.",
+                  variant: "destructive",
+                  duration: 2000,
+                });
+              }
+            }}
+            disabled={!path.length}
+          >
             <RotateCcw className="w-6 h-6" />
           </button>
 
@@ -128,8 +190,10 @@ const GPSDrawingApp = () => {
 
           {/* Save Button */}
           <button
-            className="w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors"
-            onClick={() => handleFinishDrawing()}
+            className={`w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors
+            ${isSaving ? "!bg-text-disabled animate-pulse" : ""}`}
+            onClick={handleSaveButtonClick}
+            disabled={isSaving}
           >
             <ArrowDownToLine className="w-6 h-6" />
           </button>

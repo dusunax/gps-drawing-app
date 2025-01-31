@@ -7,9 +7,20 @@ export interface Position {
   lng: number;
 }
 
+const DUMMY_POSITION = {
+  lat: 37.566535,
+  lng: 126.977125,
+};
+
 const useGPS = () => {
-  const [position, setPosition] = useState<Position | null>(null);
-  const [path, setPath] = useState<Position[]>([]);
+  const [position, setPosition] = useState<Position | null>(DUMMY_POSITION);
+  const [path, setPath] = useState<Position[]>([DUMMY_POSITION]);
+
+  const resetPath = () => {
+    setPath([]);
+  };
+
+  return { position, path, resetPath };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updatePosition = useCallback(
@@ -44,7 +55,7 @@ const useGPS = () => {
     }
   }, [updatePosition]);
 
-  return { position, path };
+  // return { position, path };
 };
 
 export default useGPS;
