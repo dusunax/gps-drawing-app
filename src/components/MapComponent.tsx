@@ -7,16 +7,20 @@ import {
   Polyline,
   Marker,
 } from "@react-google-maps/api";
-import { Position } from "@/hooks/useGPS";
 
 const seoulCenter = { lat: 37.5665, lng: 126.978 };
 
 interface MapComponentProps {
-  position: Position | null;
-  path: Position[];
+  position: { lat: number; lng: number } | null;
+  path: { lat: number; lng: number }[];
+  imageContainerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function MapComponent({ position, path }: MapComponentProps) {
+export default function MapComponent({
+  position,
+  path,
+  imageContainerRef,
+}: MapComponentProps) {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
@@ -29,8 +33,12 @@ export default function MapComponent({ position, path }: MapComponentProps) {
     }
   }, [isLoaded, map, position]);
 
-  return isLoaded ? (
-    <div className="relative w-full h-full">
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="relative w-full h-full" ref={imageContainerRef}>
       <GoogleMap
         center={position || seoulCenter}
         zoom={15}
@@ -51,7 +59,5 @@ export default function MapComponent({ position, path }: MapComponentProps) {
         />
       </GoogleMap>
     </div>
-  ) : (
-    <div>Loading...</div>
   );
 }

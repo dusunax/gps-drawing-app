@@ -11,13 +11,13 @@ const useGPS = () => {
   const [position, setPosition] = useState<Position | null>(null);
   const [path, setPath] = useState<Position[]>([]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updatePosition = useCallback(
     throttle((newPosition: Position) => {
       setPosition(newPosition);
       console.log("newPosition", newPosition);
       setPath((prevPath) => [...prevPath, newPosition]);
-    }, 1000),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, 5000),
     []
   );
 

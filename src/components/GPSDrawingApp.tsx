@@ -1,17 +1,44 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Navigation2, RotateCcw, ArrowDownToLine, Logs } from "lucide-react";
-import MapComponent from "./Map";
-import useGPS from "@/hooks/useGPS";
+import MapComponent from "./MapComponent";
+import useGPS from "@/hooks/use-GPS";
+import useImageSaver from "@/hooks/use-image-saver";
+import { toast } from "@/hooks/use-toast";
 
 const GPSDrawingApp = () => {
   const { position, path } = useGPS();
-  const [isRecording, setIsRecording] = useState(false);
   const isGPSActive = position !== null;
+  const [isRecording, setIsRecording] = useState(false);
+
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const { saveImageLocally, sendImageToServer } = useImageSaver({
+    imageContainerRef,
+  });
 
   const totalDistance = 0;
-  const totalPoints = 0;
+  const totalPoints = path.length; // 경로의 점 개수
   const totalTime = 0;
+
+  const handleFinishDrawing = () => {
+    try {
+      saveImageLocally();
+      sendImageToServer();
+      toast({
+        title: "저장 이미지",
+        description: "이미지가 저장 되었습니다",
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error("Error saving image", error);
+      toast({
+        title: "저장 실패",
+        description: "뭔가가 뭔가 실패했습니다",
+        duration: 2000,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="h-screen bg-dark-background text-text-primary">
@@ -25,7 +52,11 @@ const GPSDrawingApp = () => {
       {/* Map Area */}
       <div className="relative h-[calc(100vh-200px)] bg-dark-background">
         {/* GPS Signal Indicator */}
-        <MapComponent position={position} path={path} />
+        <MapComponent
+          position={position}
+          path={path}
+          imageContainerRef={imageContainerRef}
+        />
         <div className="absolute top-4 right-4 flex items-center gap-2 bg-dark-surface bg-opacity-90 px-3 py-2 rounded-full">
           <Navigation2
             className={`w-3 h-3 ${
@@ -59,14 +90,6 @@ const GPSDrawingApp = () => {
             </div>
             <span className="text-text-secondary text-label">MIN</span>
           </div>
-
-          {/* Accuracy
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-dark-button flex items-center justify-center mb-1 shadow-button">
-              <span className="text-stats text-brand-primary">High</span>
-            </div>
-            <span className="text-text-secondary text-label">GPS</span>
-          </div> */}
 
           {/* Points */}
           <div className="text-center">
@@ -104,7 +127,10 @@ const GPSDrawingApp = () => {
           </button>
 
           {/* Save Button */}
-          <button className="w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors">
+          <button
+            className="w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors"
+            onClick={() => handleFinishDrawing()}
+          >
             <ArrowDownToLine className="w-6 h-6" />
           </button>
         </div>
