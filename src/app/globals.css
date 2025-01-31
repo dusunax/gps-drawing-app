@@ -28,7 +28,7 @@
   }
 }
 .animate-recording-pulse {
-  animation: recording-pulse 2s ease-in-out infinite;
+  animation: recording-pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes gps-signal {

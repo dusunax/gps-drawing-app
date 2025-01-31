@@ -1,11 +1,10 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { Navigation2, RotateCcw, ArrowDownToLine, Logs } from "lucide-react";
+import { Navigation2, ArrowDownToLine, Logs } from "lucide-react";
 import MapComponent from "./MapComponent";
 import useGPS from "@/hooks/use-GPS";
 import useImageSaver from "@/hooks/use-image-saver";
 import Image from "next/image";
-import { toast } from "@/hooks/use-toast";
 
 interface SavedImage {
   id: string;
@@ -13,24 +12,20 @@ interface SavedImage {
 }
 
 const GPSDrawingApp = () => {
-  const { position, path, resetPath } = useGPS();
+  const [isRecording, setIsRecording] = useState(true);
+  const { position, path, totalTime, totalDistance, totalPoints } = useGPS({
+    isRecording,
+  });
   const isGPSActive = position !== null;
-  const [isRecording, setIsRecording] = useState(false);
 
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const { handleSaveImage, isSaving, saveImageLocally } = useImageSaver({
+  const { handleSaveImage, isSaving } = useImageSaver({
     imageContainerRef,
   });
-
   const [savedImages, setSavedImages] = useState<SavedImage[]>([]);
-
-  const totalDistance = 0;
-  const totalPoints = path.length; // 경로의 점 개수
-  const totalTime = 0;
 
   const handleSaveButtonClick = async () => {
     const result = await handleSaveImage();
-    console.log(result);
     if (result.ok) {
       const { imageUrl, id } = result.data as SavedImage;
       setSavedImages((prev) => [...prev, { id, imageUrl }]);
@@ -58,12 +53,18 @@ const GPSDrawingApp = () => {
           <Navigation2
             className={`w-3 h-3 ${
               isGPSActive
-                ? "text-status-success animate-gps-signal"
+                ? isRecording
+                  ? "text-status-success animate-gps-signal"
+                  : "text-text-secondary"
                 : "text-status-error"
             }`}
           />
           <span className="text-xs">
-            {isGPSActive ? "GPS Active" : "No Signal"}
+            {isGPSActive
+              ? isRecording
+                ? "GPS Active"
+                : "Paused"
+              : "No Signal"}
           </span>
         </div>
 
@@ -85,7 +86,7 @@ const GPSDrawingApp = () => {
             <div className="w-12 h-12 rounded-full bg-dark-button flex items-center justify-center mb-1 shadow-button">
               <span
                 className={`text-stats ${
-                  totalTime > 0 ? "text-status-success" : ""
+                  Number(totalTime) > 0 ? "text-status-success" : ""
                 }`}
               >
                 {totalTime}
@@ -116,7 +117,9 @@ const GPSDrawingApp = () => {
                     <li
                       key={id}
                       className="h-10 w-10 relative bg-text-secondary rounded-md overflow-hidden cursor-pointer"
-                      onClick={() => saveImageLocally(imageUrl)}
+                      onClick={() => {
+                        window.open(imageUrl, "_blank");
+                      }}
                     >
                       <Image
                         src={imageUrl}
@@ -148,9 +151,10 @@ const GPSDrawingApp = () => {
         </div>
 
         {/* Control Buttons */}
-        <div className="flex justify-between items-center px-4">
+        <div className="flex justify-between items-center px-6">
           {/* Reset Button */}
-          <button
+          <div className="w-16 h-16"></div>
+          {/* <button
             className={`w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors
             ${!path.length ? "opacity-50" : ""}`}
             onClick={() => {
@@ -167,7 +171,7 @@ const GPSDrawingApp = () => {
             disabled={!path.length}
           >
             <RotateCcw className="w-6 h-6" />
-          </button>
+          </button> */}
 
           {/* Record Button */}
           <button

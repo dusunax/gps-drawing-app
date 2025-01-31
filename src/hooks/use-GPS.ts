@@ -1,35 +1,71 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { differenceInSeconds } from "date-fns";
 import throttle from "lodash.throttle";
+import { haversineDistance } from "@/utils/haversine-distance";
+import { fixedNumber } from "@/utils/fixed-number";
+
+interface UseGPSProps {
+  isRecording: boolean;
+}
 
 export interface Position {
   lat: number;
   lng: number;
+  timestamp: number;
 }
 
-const DUMMY_POSITION = {
-  lat: 37.566535,
-  lng: 126.977125,
-};
-
-const useGPS = () => {
-  const [position, setPosition] = useState<Position | null>(DUMMY_POSITION);
-  const [path, setPath] = useState<Position[]>([DUMMY_POSITION]);
+const useGPS = ({ isRecording }: UseGPSProps) => {
+  const [position, setPosition] = useState<Position | null>(null);
+  const [path, setPath] = useState<Position[]>([]);
 
   const resetPath = () => {
     setPath([]);
   };
 
-  return { position, path, resetPath };
+  const totalTime = useMemo(() => {
+    if (path.length < 2) return 0;
+    const startTime = path[0].timestamp;
+    const endTime = path[path.length - 1].timestamp;
+
+    return fixedNumber(
+      differenceInSeconds(new Date(endTime), new Date(startTime)) / 60,0
+    );
+  }, [path]);
+
+  const totalDistance = useMemo(() => {
+    return path.length > 1
+      ? fixedNumber(
+          haversineDistance(
+            path[path.length - 1].lat,
+            path[path.length - 1].lng,
+            path[0].lat,
+            path[0].lng
+          ),
+          2
+        )
+      : 0;
+  }, [path]);
+  const totalPoints = useMemo(() => {
+    return fixedNumber((path.length * Number(totalTime)) / 15);
+  }, [path, totalTime]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updatePosition = useCallback(
     throttle((newPosition: Position) => {
       setPosition(newPosition);
-      console.log("newPosition", newPosition);
+      const isSamePosition =
+        path.length > 0 &&
+        path[path.length - 1].lat === newPosition.lat &&
+        path[path.length - 1].lng === newPosition.lng;
+
+      if (!isRecording || isSamePosition) {
+        return;
+      }
+
       setPath((prevPath) => [...prevPath, newPosition]);
     }, 5000),
-    []
+    [isRecording]
   );
 
   useEffect(() => {
@@ -39,13 +75,14 @@ const useGPS = () => {
           const newPosition = {
             lat: pos.coords.latitude,
             lng: pos.coords.longitude,
+            timestamp: pos.timestamp,
           };
           updatePosition(newPosition);
         },
         (error) => {
           console.error("Error fetching position", error);
         },
-        { enableHighAccuracy: true }
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
       );
 
       return () => {
@@ -55,7 +92,7 @@ const useGPS = () => {
     }
   }, [updatePosition]);
 
-  // return { position, path };
+  return { position, path, resetPath, totalTime, totalDistance, totalPoints };
 };
 
 export default useGPS;

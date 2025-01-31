@@ -1,13 +1,8 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Polyline,
-  Marker,
-} from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { Position } from "@/hooks/use-GPS";
+import { getRainbowColor } from "@/utils/get-rainbow-color";
 
 const seoulCenter = { lat: 37.5665, lng: 126.978 };
 
@@ -27,6 +22,30 @@ export default function MapComponent({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
   });
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [color, setColor] = useState(getRainbowColor());
+  const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setColor(getRainbowColor({ speed: 3 }));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (map) {
+      setPolyline(
+        new google.maps.Polyline({
+          path,
+          geodesic: true,
+          strokeColor: color,
+          strokeOpacity: 0.5,
+          strokeWeight: 10,
+        })
+      );
+    }
+  }, [map, color, path]);
 
   useEffect(() => {
     if (isLoaded && map && position) {
@@ -52,15 +71,14 @@ export default function MapComponent({
           disableDefaultUI: true,
         }}
       >
-        {position && <Marker position={position} />}
-        <Polyline
-          path={path}
-          options={{
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 10,
-          }}
-        />
+        {position && (
+          <Marker
+            position={position}
+            icon={"http://maps.google.com/mapfiles/ms/icons/green.png"}
+            title="Your current location"
+          />
+        )}
+        {(polyline && polyline.setMap(map)) || null}
       </GoogleMap>
     </div>
   );
