@@ -7,25 +7,21 @@ import {
   Polyline,
   Marker,
 } from "@react-google-maps/api";
-import useGPS from "@hooks/useGPS";
+import { Position } from "@/hooks/useGPS";
 
 const seoulCenter = { lat: 37.5665, lng: 126.978 };
 
 interface MapComponentProps {
-  onFinishDrawing: (positions: google.maps.LatLngLiteral[]) => void;
+  position: Position | null;
+  path: Position[];
 }
 
-export default function MapComponent({ onFinishDrawing }: MapComponentProps) {
-  const { position, path } = useGPS();
+export default function MapComponent({ position, path }: MapComponentProps) {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
   });
   const [map, setMap] = useState<google.maps.Map | null>(null);
-
-  const handleFinishDrawing = () => {
-    onFinishDrawing(path);
-  };
 
   useEffect(() => {
     if (isLoaded && map && position) {
@@ -34,12 +30,15 @@ export default function MapComponent({ onFinishDrawing }: MapComponentProps) {
   }, [isLoaded, map, position]);
 
   return isLoaded ? (
-    <div style={{ position: "relative", width: "100%", height: "100vh" }}>
+    <div className="relative w-full h-full">
       <GoogleMap
         center={position || seoulCenter}
         zoom={15}
         mapContainerStyle={{ width: "100%", height: "100%" }}
         onLoad={(mapInstance) => setMap(mapInstance)}
+        options={{
+          disableDefaultUI: true,
+        }}
       >
         {position && <Marker position={position} />}
         <Polyline
@@ -51,18 +50,6 @@ export default function MapComponent({ onFinishDrawing }: MapComponentProps) {
           }}
         />
       </GoogleMap>
-
-      <button
-        onClick={handleFinishDrawing}
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          zIndex: 1000,
-        }}
-      >
-        Finish Drawing
-      </button>
     </div>
   ) : (
     <div>Loading...</div>

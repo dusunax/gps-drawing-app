@@ -1,6 +1,6 @@
 "use client";
-import MapComponent from "@components/Map";
+import GPSDrawingApp from "@/components/GPSDrawingApp";
 
 export default function Home() {
-  return <MapComponent onFinishDrawing={() => {}} />;
+  return <GPSDrawingApp />;
 }

@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import throttle from "lodash.throttle";
 
-interface Position {
+export interface Position {
   lat: number;
   lng: number;
 }
@@ -17,6 +17,7 @@ const useGPS = () => {
       console.log("newPosition", newPosition);
       setPath((prevPath) => [...prevPath, newPosition]);
     }, 1000),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
