@@ -82,12 +82,12 @@ AWS_S3_BUCKET_NAME=your_s3_bucket_name
 ```bash
 git clone https://github.com/dusunax/gps-drawing-app.git
 cd gps-drawing-app
-npm install
+yarn install
 ```
 
 #### 3️⃣ 로컬 서버 실행
 ```bash
-npm run dev
+yarn dev
 ```
 
 ### 📜 API 엔드포인트
