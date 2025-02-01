@@ -46,49 +46,16 @@ src
 ├── app
 │   ├── api
 │   │   └── save-image
-│   │       └── route.ts
-│   ├── drawing-list
-│   │   └── page.tsx
-│   ├── globals.css
-│   ├── icon.png
-│   ├── layout.tsx
-│   ├── manifest.ts
-│   └── page.tsx
+│   └── drawing-list
 ├── components
-│   ├── DrawingList.tsx
-│   ├── DrawingSettingsDrawer.tsx
-│   ├── DrawingStats.tsx
-│   ├── GPSDrawingApp.tsx
-│   ├── Header.tsx
-│   ├── MapComponent.tsx
 │   └── ui
-│       ├── alert-dialog.tsx
-│       ├── button.tsx
-│       ├── card.tsx
-│       ├── drawer.tsx
-│       ├── input.tsx
-│       ├── label.tsx
-│       ├── toast.tsx
-│       └── toaster.tsx
 ├── hooks
-│   ├── use-GPS.ts
-│   ├── use-image-saver.ts
-│   └── use-toast.ts
 ├── lib
 │   ├── database
-│   │   ├── firebase.ts
-│   │   └── get-all-drawings.ts
 │   ├── shadcn
-│   │   └── utils.ts
 │   └── storage
-│       └── aws.ts
 ├── types
-│   └── drawing.ts
 └── utils
-    ├── fixed-number.ts
-    ├── get-rainbow-color.ts
-    ├── get-random-description.ts
-    └── haversine-distance.ts
 ```
 
 ### ⚡️ 설치 및 실행 방법
@@ -96,11 +63,18 @@ src
 #### 1️⃣ 환경 변수 설정
 `.env.local` 파일을 프로젝트 루트에 생성하고 필요한 환경 변수를 추가하세요.
 ```bash
-NEXT_PUBLIC_API_URL=your_api_url
-FIREBASE_API_KEY=your_firebase_api_key
-AWS_REGION=your_aws_region
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+
+NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_firebase_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
+
 AWS_ACCESS_KEY_ID=your_aws_access_key
 AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=your_aws_region
 AWS_S3_BUCKET_NAME=your_s3_bucket_name
 ```
 
