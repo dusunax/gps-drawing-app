@@ -10,6 +10,9 @@ export async function POST(req: Request) {
   const imageFile = formData.get("image") as File;
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
+  const distance = formData.get("distance") as string;
+  const duration = formData.get("duration") as string;
+  const points = formData.get("points") as string;
 
   const imageUrl = await uploadToS3({ imageFile, userId });
 
@@ -20,6 +23,11 @@ export async function POST(req: Request) {
     imageUrl,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
+    enrich: {
+      distance: Number(distance),
+      duration: Number(duration),
+      points: Number(points),
+    },
   };
 
   const drawingRef = collection(db, "drawings");

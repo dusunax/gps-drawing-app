@@ -3,30 +3,31 @@ export interface LatLng {
   lng: number;
 }
 
-export interface DrawingData {
-  id?: string;
-  userId: string;
-  title: string;
-  description?: string;
-  points: LatLng[];
-  distance: number;
-  duration: number;
-  createdAt: Date;
-  updatedAt: Date;
-  imageUrl?: string;
+export interface Position {
+  lat: number;
+  lng: number;
+  timestamp: number;
 }
 
-export interface CreateDrawingRequest {
-  title: string;
-  description?: string;
-  points: LatLng[];
-  distance: number;
-  duration: number;
-  imageBase64?: string;
-}
-
-export interface UpdateDrawingRequest {
+export interface Drawing {
+  createdAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  description: string;
   id: string;
-  title?: string;
-  description?: string;
+  imageUrl: string;
+  title: string;
+  updatedAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  userId: string;
+  enrich?: DrawingEnrich;
+}
+
+export interface DrawingEnrich {
+  distance: number;
+  duration: number;
+  points: number;
 }

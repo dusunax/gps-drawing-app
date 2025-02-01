@@ -2,17 +2,12 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { differenceInSeconds } from "date-fns";
 import throttle from "lodash.throttle";
+import type { Position } from "@/types/drawing";
 import { haversineDistance } from "@/utils/haversine-distance";
 import { fixedNumber } from "@/utils/fixed-number";
 
 interface UseGPSProps {
   isRecording: boolean;
-}
-
-export interface Position {
-  lat: number;
-  lng: number;
-  timestamp: number;
 }
 
 const useGPS = ({ isRecording }: UseGPSProps) => {

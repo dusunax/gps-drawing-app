@@ -1,12 +1,14 @@
 import { useState } from "react";
 import html2canvas from "html2canvas";
+import type { DrawingEnrich } from "@/types/drawing";
 import { toast } from "./use-toast";
 
 interface UseImageSaverProps {
   imageContainerRef: React.RefObject<HTMLDivElement | null>;
+  enrich: DrawingEnrich;
 }
 
-const useImageSaver = ({ imageContainerRef }: UseImageSaverProps) => {
+const useImageSaver = ({ imageContainerRef, enrich }: UseImageSaverProps) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const updateDrawingCanvas = async () => {
@@ -43,6 +45,9 @@ const useImageSaver = ({ imageContainerRef }: UseImageSaverProps) => {
           formData.append("image", blob, fileName);
           formData.append("title", "test-title");
           formData.append("description", "test-description");
+          formData.append("distance", enrich.distance.toString());
+          formData.append("duration", enrich.duration.toString());
+          formData.append("points", enrich.points.toString());
 
           const response = await fetch("/api/save-image", {
             method: "POST",

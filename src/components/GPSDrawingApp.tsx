@@ -1,10 +1,12 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { Navigation2, ArrowDownToLine, Logs } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { Navigation2, ArrowDownToLine, Images, Loader } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import MapComponent from "./MapComponent";
 import useGPS from "@/hooks/use-GPS";
 import useImageSaver from "@/hooks/use-image-saver";
 import Image from "next/image";
+import Link from "next/link";
 
 interface SavedImage {
   id: string;
@@ -21,6 +23,11 @@ const GPSDrawingApp = () => {
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const { handleSaveImage, isSaving } = useImageSaver({
     imageContainerRef,
+    enrich: {
+      distance: totalDistance,
+      duration: totalTime,
+      points: totalPoints,
+    },
   });
   const [savedImages, setSavedImages] = useState<SavedImage[]>([]);
 
@@ -32,18 +39,19 @@ const GPSDrawingApp = () => {
     }
   };
 
-  return (
-    <div className="h-screen bg-dark-background text-text-primary">
-      <nav className="h-nav bg-dark-surface px-6 flex items-center justify-between shadow-float">
-        <h1 className="text-md font-semibold">GPS Drawing</h1>
-        <button className="w-10 h-10 flex items-center justify-center hover:bg-opacity-80 transition-colors">
-          <Logs className="w-5 h-5" />
-        </button>
-      </nav>
+  useEffect(() => {
+    if (isSaving) {
+      toast({
+        title: "잠시만 기다려주세요😴",
+        description: "이미지를 저장 중입니다",
+        duration: 3000,
+      });
+    }
+  }, [isSaving]);
 
-      {/* Map Area */}
+  return (
+    <>
       <div className="relative h-[calc(100vh-200px)] bg-dark-background">
-        {/* GPS Signal Indicator */}
         <MapComponent
           position={position}
           path={path}
@@ -153,25 +161,13 @@ const GPSDrawingApp = () => {
         {/* Control Buttons */}
         <div className="flex justify-between items-center px-6">
           {/* Reset Button */}
-          <div className="w-16 h-16"></div>
-          {/* <button
+          <Link
             className={`w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors
             ${!path.length ? "opacity-50" : ""}`}
-            onClick={() => {
-              if (path.length) {
-                resetPath();
-                toast({
-                  title: "Reset Path",
-                  description: "Path has been reset.",
-                  variant: "destructive",
-                  duration: 2000,
-                });
-              }
-            }}
-            disabled={!path.length}
+            href="/drawing-list"
           >
-            <RotateCcw className="w-6 h-6" />
-          </button> */}
+            <Images className="w-6 h-6" />
+          </Link>
 
           {/* Record Button */}
           <button
@@ -195,15 +191,22 @@ const GPSDrawingApp = () => {
           {/* Save Button */}
           <button
             className={`w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors
-            ${isSaving ? "!bg-text-disabled animate-pulse" : ""}`}
+            ${isSaving ? "!bg-text-disabled animate-spin" : ""}`}
             onClick={handleSaveButtonClick}
             disabled={isSaving}
+            style={{
+              animationDuration: "1.5s",
+            }}
           >
-            <ArrowDownToLine className="w-6 h-6" />
+            {isSaving ? (
+              <Loader className="w-6 h-6" />
+            ) : (
+              <ArrowDownToLine className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

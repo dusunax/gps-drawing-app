@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
-import { Position } from "@/hooks/use-GPS";
+import type { Position } from "@/types/drawing";
 import { getRainbowColor } from "@/utils/get-rainbow-color";
 
 const seoulCenter = { lat: 37.5665, lng: 126.978 };
