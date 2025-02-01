@@ -24,22 +24,27 @@ const useGPS = ({ isRecording }: UseGPSProps) => {
     const endTime = path[path.length - 1].timestamp;
 
     return fixedNumber(
-      differenceInSeconds(new Date(endTime), new Date(startTime)) / 60,0
+      differenceInSeconds(new Date(endTime), new Date(startTime)) / 60,
+      0
     );
   }, [path]);
 
   const totalDistance = useMemo(() => {
-    return path.length > 1
-      ? fixedNumber(
-          haversineDistance(
-            path[path.length - 1].lat,
-            path[path.length - 1].lng,
-            path[0].lat,
-            path[0].lng
-          ),
-          2
-        )
-      : 0;
+    if (path.length < 2) return 0; 
+    let distance = 0;
+
+    for (let i = 1; i < path.length; i++) {
+      const prevPoint = path[i - 1];
+      const currentPoint = path[i];
+      distance += haversineDistance(
+        prevPoint.lat,
+        prevPoint.lng,
+        currentPoint.lat,
+        currentPoint.lng
+      );
+    }
+
+    return fixedNumber(distance, 2); // 소수점 둘째 자리까지 반올림
   }, [path]);
   const totalPoints = useMemo(() => {
     return fixedNumber((path.length * Number(totalTime)) / 15);
