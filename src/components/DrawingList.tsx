@@ -38,24 +38,23 @@ export default function DrawingList({ jsonData }: { jsonData: string }) {
                   </p>
                 </div>
 
-                {drawing.enrich !== undefined && (
-                  // {drawing.enrich !== undefined &&
-                  // drawing.enrich?.duration > 0 && (
-                  <aside className="min-w-24 flex flex-col gap-y-1 sm:gap-4 shrink-0 justify-end">
-                    <EnrichInfo
-                      label="Distance"
-                      value={drawing.enrich?.distance || 0}
-                    />
-                    <EnrichInfo
-                      label="Duration"
-                      value={drawing.enrich?.duration || 0}
-                    />
-                    <EnrichInfo
-                      label="Points"
-                      value={drawing.enrich?.points || 0}
-                    />
-                  </aside>
-                )}
+                {drawing.enrich !== undefined &&
+                  drawing.enrich?.duration > 0 && (
+                    <aside className="min-w-24 flex flex-col gap-y-1 sm:gap-4 shrink-0 justify-end">
+                      <EnrichInfo
+                        label="Distance"
+                        value={drawing.enrich?.distance || 0}
+                      />
+                      <EnrichInfo
+                        label="Duration"
+                        value={drawing.enrich?.duration || 0}
+                      />
+                      <EnrichInfo
+                        label="Points"
+                        value={drawing.enrich?.points || 0}
+                      />
+                    </aside>
+                  )}
               </div>
             </div>
           </CardContent>
