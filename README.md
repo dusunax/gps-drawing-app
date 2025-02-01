@@ -27,7 +27,7 @@
 - 📷 그린 그림을 이미지로 저장
 - 🌍 다른 사용자의 GPS 그림 목록 보기
 - 📏 거리 및 시간 안내
-- ✏️ 제목과 설명 수정
+- ✏️ 제목과 설명 설정
 
 ---
 
@@ -36,7 +36,7 @@
 
 
 ### 🛠 기술 스택
-- **Frontend**: React, Next.js, Tailwind CSS, Google Maps API 
+- **Frontend**: React, Next.js 15, Tailwind CSS 4.0, Google Maps API 
 - **Backend**: Firestore, AWS S3
 - **이미지 최적화**: sharp
 
