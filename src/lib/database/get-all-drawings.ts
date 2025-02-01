@@ -19,5 +19,3 @@ export async function getAllDrawings(): Promise<Drawing[]> {
     throw new Error("Failed to fetch drawings");
   }
 }
-
-export const dynamic = "force-dynamic"; 
