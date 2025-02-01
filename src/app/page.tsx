@@ -1,17 +1,32 @@
 "use client";
+import { useState } from "react";
 import GPSDrawingApp from "@/components/GPSDrawingApp";
-import { Logs } from "lucide-react";
 import Header from "@/components/Header";
+import DrawingSettingDrawer from "@/components/DrawingSettingsDrawer";
+import { randomDescription } from "@/utils/get-random-description";
 
 export default function Home() {
+  const [title, setTitle] = useState("My GPS Drawing");
+  const [description, setDescription] = useState(randomDescription());
+
+  const drawingInputs = {
+    title,
+    description,
+  };
+
   return (
     <>
       <Header>
-        <button className="w-10 h-10 flex items-center justify-center hover:bg-opacity-80 transition-colors">
-          <Logs className="w-5 h-5" />
-        </button>
+        <DrawingSettingDrawer
+          title={title}
+          description={description}
+          onTitleChange={setTitle}
+          onDescriptionChange={setDescription}
+          initialTitle={title}
+          initialDescription={description}
+        />
       </Header>
-      <GPSDrawingApp />
+      <GPSDrawingApp drawingInputs={drawingInputs} />
     </>
   );
 }

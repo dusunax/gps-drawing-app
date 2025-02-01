@@ -25,7 +25,7 @@ export default function DrawingList({ jsonData }: { jsonData: string }) {
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
-              <div className="flex-1 flex justify-between">
+              <div className="flex-1 flex justify-between gap-8">
                 <div>
                   <h3 className="font-semibold text-lg text-brand-primary">
                     {drawing.title}
@@ -33,25 +33,29 @@ export default function DrawingList({ jsonData }: { jsonData: string }) {
                   <p className="text-sm text-text-muted mb-2 ">
                     {format(new Date(drawing.createdAt.seconds * 1000), "Pp")}
                   </p>
+                  <p className="text-sm text-text-muted mb-2 line-clamp-3">
+                    {drawing.description}
+                  </p>
                 </div>
 
-                {drawing.enrich !== undefined &&
-                  drawing.enrich?.duration > 0 && (
-                    <aside className="grid grid-cols-1 sm:grid-cols-3 gap-y-1 sm:gap-4">
-                      <EnrichInfo
-                        label="Distance"
-                        value={drawing.enrich?.distance || 0}
-                      />
-                      <EnrichInfo
-                        label="Duration"
-                        value={drawing.enrich?.duration || 0}
-                      />
-                      <EnrichInfo
-                        label="Points"
-                        value={drawing.enrich?.points || 0}
-                      />
-                    </aside>
-                  )}
+                {drawing.enrich !== undefined && (
+                  // {drawing.enrich !== undefined &&
+                  // drawing.enrich?.duration > 0 && (
+                  <aside className="min-w-24 flex flex-col gap-y-1 sm:gap-4 shrink-0 justify-end">
+                    <EnrichInfo
+                      label="Distance"
+                      value={drawing.enrich?.distance || 0}
+                    />
+                    <EnrichInfo
+                      label="Duration"
+                      value={drawing.enrich?.duration || 0}
+                    />
+                    <EnrichInfo
+                      label="Points"
+                      value={drawing.enrich?.points || 0}
+                    />
+                  </aside>
+                )}
               </div>
             </div>
           </CardContent>

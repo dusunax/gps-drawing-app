@@ -6,9 +6,16 @@ import { toast } from "./use-toast";
 interface UseImageSaverProps {
   imageContainerRef: React.RefObject<HTMLDivElement | null>;
   enrich: DrawingEnrich;
+  title: string;
+  description: string;
 }
 
-const useImageSaver = ({ imageContainerRef, enrich }: UseImageSaverProps) => {
+const useImageSaver = ({
+  imageContainerRef,
+  enrich,
+  title,
+  description,
+}: UseImageSaverProps) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const updateDrawingCanvas = async () => {
@@ -20,12 +27,12 @@ const useImageSaver = ({ imageContainerRef, enrich }: UseImageSaverProps) => {
     return canvas;
   };
 
-  const saveImageLocally = (imgUrl: string) => {
+  const saveImageLocally = (imgUrl: string, title: string) => {
     try {
       const date = new Date().toISOString().split("T")[0];
       const link = document.createElement("a");
       link.href = imgUrl;
-      link.download = `${date}-map-drawing.png`;
+      link.download = `${date}-${title}.png`;
       link.click();
     } catch (error) {
       console.error("🚨 Failed to save image locally", error);
@@ -43,8 +50,8 @@ const useImageSaver = ({ imageContainerRef, enrich }: UseImageSaverProps) => {
 
           const formData = new FormData();
           formData.append("image", blob, fileName);
-          formData.append("title", "test-title");
-          formData.append("description", "test-description");
+          formData.append("title", title);
+          formData.append("description", description);
           formData.append("distance", enrich.distance.toString());
           formData.append("duration", enrich.duration.toString());
           formData.append("points", enrich.points.toString());
@@ -73,12 +80,12 @@ const useImageSaver = ({ imageContainerRef, enrich }: UseImageSaverProps) => {
       if (!canvas) throw new Error("Failed to update drawing canvas");
 
       const image = canvas.toDataURL("image/png");
-      saveImageLocally(image);
+      saveImageLocally(image, title);
 
       const data = await sendImageToServer(canvas);
 
       toast({
-        title: "저장 완료",
+        title,
         description: "이미지가 저장 되었습니다",
         duration: 2000,
       });

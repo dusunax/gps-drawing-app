@@ -7,13 +7,14 @@ import useGPS from "@/hooks/use-GPS";
 import useImageSaver from "@/hooks/use-image-saver";
 import Image from "next/image";
 import Link from "next/link";
+import { DrawingInputs } from "@/types/drawing";
 
 interface SavedImage {
   id: string;
   imageUrl: string;
 }
 
-const GPSDrawingApp = () => {
+const GPSDrawingApp = ({ drawingInputs }: { drawingInputs: DrawingInputs }) => {
   const [isRecording, setIsRecording] = useState(true);
   const { position, path, totalTime, totalDistance, totalPoints } = useGPS({
     isRecording,
@@ -28,6 +29,8 @@ const GPSDrawingApp = () => {
       duration: totalTime,
       points: totalPoints,
     },
+    title: drawingInputs.title,
+    description: drawingInputs.description,
   });
   const [savedImages, setSavedImages] = useState<SavedImage[]>([]);
 

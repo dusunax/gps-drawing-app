@@ -31,3 +31,8 @@ export interface DrawingEnrich {
   duration: number;
   points: number;
 }
+
+export interface DrawingInputs {
+  title: string;
+  description: string;
+}
