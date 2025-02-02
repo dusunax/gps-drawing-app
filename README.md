@@ -19,8 +19,12 @@
 
 ## 🚀 소개
 
-<img src="https://github.com/user-attachments/assets/a451d1c7-b2f0-44b0-9b80-aa51215cd7b5" width="250">
-<img src="https://github.com/user-attachments/assets/7c93e8cd-d58d-42c3-9c44-83e9d2beff74" width="250">
+### 스크린샷
+
+<img src="https://github.com/user-attachments/assets/9278eb4f-ea42-4e08-ba5d-74667d3da532" width="250">
+<img src="https://github.com/user-attachments/assets/715e9b98-0b4f-4d7d-ba2a-c609787a34ec" width="250">
+<img src="https://github.com/user-attachments/assets/6d319d94-c5fd-431f-b893-a7485ae542a7" width="250">
+<img src="https://github.com/user-attachments/assets/c050c49e-1d1f-4501-a4a6-4420244f1a94" width="250">
 
 ### 주요 기능
 - 🖍️ 구글 지도 위에 GPS를 기반으로 그림 그리기
