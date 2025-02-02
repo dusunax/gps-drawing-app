@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import DrawingDetail from "@/components/DrawingDetail";
 import { getDrawingById } from "@/lib/database/get-drawing-by-id";
+import Loading from "@/components/Loading";
 
 type Params = Promise<{ id: string }>;
 
@@ -19,7 +20,7 @@ export default async function Page(props: { params: Params }) {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <DrawingDetail jsonData={jsonData} />
     </Suspense>
   );

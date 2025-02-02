@@ -5,15 +5,16 @@ import DrawingStats from "@/components/DrawingStats";
 import Header from "@/components/Header";
 import { Map } from "lucide-react";
 import { getAllDrawings } from "@/lib/database/get-all-drawings";
+import Loading from "@/components/Loading";
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
   const drawings = await getAllDrawings();
   const jsonData = JSON.stringify(drawings);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <Header>
         <Link
           href="/"
