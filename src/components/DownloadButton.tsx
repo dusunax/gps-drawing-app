@@ -1,5 +1,5 @@
 "use client";
-import { Save } from "lucide-react";
+import { ImageDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/shadcn/utils";
 
@@ -27,7 +27,7 @@ export default function DownloadButton({
       className={cn("w-10 h-10 flex items-center justify-center", className)}
       onClick={downloadDrawing}
     >
-      <Save className="w-6 h-6" />
+      <ImageDown className="scale-110" />
     </Button>
   );
 }

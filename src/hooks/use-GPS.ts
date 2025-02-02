@@ -47,8 +47,8 @@ const useGPS = ({ isRecording }: UseGPSProps) => {
     return fixedNumber(distance, 2); // 소수점 둘째 자리까지 반올림
   }, [path]);
   const totalPoints = useMemo(() => {
-    return fixedNumber((path.length * Number(totalTime)) / 15);
-  }, [path, totalTime]);
+    return fixedNumber(path.length + Number(totalTime) + Number(totalDistance));
+  }, [path, totalTime, totalDistance]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updatePosition = useCallback(
