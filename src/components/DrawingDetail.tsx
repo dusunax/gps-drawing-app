@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import Image from "next/image";
 import GoBackButton from "./GoBackButton";
 import DownloadButton from "./DownloadButton";
+import KakaoShareButton from "./KakaoShareButton";
 
 export default function DrawingDetail({ jsonData }: { jsonData: string }) {
   const drawing = JSON.parse(jsonData) as Drawing;
@@ -25,10 +26,16 @@ export default function DrawingDetail({ jsonData }: { jsonData: string }) {
 
         <div className="flex-1 flex flex-col gap-2">
           <div className="w-full pb-[100%] bg-text-disabled rounded-lg overflow-hidden relative">
-            <div className="absolute top-4 right-4 z-10 rounded-full bg-dark-button shadow-button text-brand-primary border border-brand-primary cursor-pointer">
-              <DownloadButton
-                imageUrl={drawing.imageUrl}
+            <div className="absolute top-4 right-4 z-10 flex gap-2">
+              <div className="bg-dark-button shadow-button text-brand-primary border border-brand-primary rounded-full cursor-pointer">
+                <DownloadButton
+                  imageUrl={drawing.imageUrl}
+                  title={drawing.title}
+                />
+              </div>
+              <KakaoShareButton
                 title={drawing.title}
+                imageUrl={drawing.imageUrl}
               />
             </div>
             <Image
