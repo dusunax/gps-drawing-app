@@ -4,7 +4,8 @@
 <img src="https://github.com/user-attachments/assets/8104484b-5f0b-4d38-bc00-7a615eeb5eae" width="300">
 
 **GPS Drawing App**은 지도 위에 그림을 그리고 이를 이미지로 저장할 수 있는 웹 애플리케이션입니다.  
-링크: https://gps-drawing-app.vercel.app/ 
+링크: https://gps-drawing-app.vercel.app/  
+시연영상: https://www.youtube.com/watch?v=FvMXZHVoYf4
 
 > [!NOTE]
 > 1. 이 서비스는 제공되는 모바일 앱 독립 실행형 뷰에 최적화되어 있습니다.   
