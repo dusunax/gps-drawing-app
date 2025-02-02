@@ -122,7 +122,7 @@ const GPSDrawingApp = ({ drawingInputs }: { drawingInputs: DrawingInputs }) => {
             {/* saved images */}
             {savedImages.length > 0 && (
               <div className="absolute w-[96vw] left-1/2 -translate-x-1/2 -top-[100%] -mt-4 bg-dark-button bg-opacity-90 px-6 py-2 rounded-2xl shadow-float z-50">
-                <h2 className="text-xs font-semibold">Drawings</h2>
+                <h2 className="text-xs font-semibold">Just Saved</h2>
                 <ul className="flex gap-2">
                   {savedImages.map(({ id, imageUrl }) => (
                     <li
