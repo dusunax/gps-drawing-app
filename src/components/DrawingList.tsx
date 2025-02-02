@@ -3,15 +3,23 @@ import Image from "next/image";
 import { format } from "date-fns";
 import type { Drawing } from "@/types/drawing";
 import { Card, CardContent } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 export default function DrawingList({ jsonData }: { jsonData: string }) {
   const drawingsArray = JSON.parse(jsonData) as Drawing[];
+  const router = useRouter();
+
+  const goToDrawing = (id: string) => {
+    console.log(id);
+    router.push(`/drawing/${id}`);
+  };
 
   return (
     <div className="space-y-3 mx-6 pb-10">
       {drawingsArray.map((drawing) => (
         <Card
           key={drawing.id}
+          onClick={() => goToDrawing(drawing.id)}
           className="hover:bg-accent transition-colors cursor-pointer bg-dark-surface border-none"
         >
           <CardContent className="p-4">
