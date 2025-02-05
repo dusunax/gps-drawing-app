@@ -8,11 +8,8 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "gps-drawing-app.s3.ap-northeast-2.amazonaws.com",
       },
-      {
-        protocol: "https",
-        hostname: "picsum.photos",
-      },
     ],
+    formats: ["image/avif", "image/webp"],
   },
 };
 

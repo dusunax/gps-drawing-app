@@ -18,7 +18,7 @@ const uploadToS3 = async ({ imageFile, userId }: UploadToS3Props) => {
 
     const optimizedImage = await sharp(Buffer.from(buffer))
       .resize({ width: 1080 })
-      .jpeg({ quality: 80 })
+      .webp({ quality: 80 })
       .toBuffer();
 
     const fileName = `${userId}/${Date.now()}.jpg`;
