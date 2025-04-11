@@ -1,11 +1,9 @@
 import { Suspense } from "react";
-import Link from "next/link";
+import { getAllDrawings } from "@/lib/database/get-all-drawings";
 import DrawingList from "@/components/DrawingList";
 import DrawingStats from "@/components/DrawingStats";
-import Header from "@/components/Header";
-import { Map } from "lucide-react";
-import { getAllDrawings } from "@/lib/database/get-all-drawings";
 import Loading from "@/components/Loading";
+import HeaderWithNav from "@/components/HeaderWithNav";
 
 export const dynamic = "force-dynamic";
 
@@ -15,14 +13,7 @@ export default async function Page() {
 
   return (
     <Suspense fallback={<Loading />}>
-      <Header>
-        <Link
-          href="/"
-          className="w-10 h-10 flex items-center justify-center hover:bg-opacity-80 transition-colors"
-        >
-          <Map className="w-5 h-5" />
-        </Link>
-      </Header>
+      <HeaderWithNav />
       <DrawingStats drawingCount={drawings.length} />
       <DrawingList jsonData={jsonData} />
     </Suspense>

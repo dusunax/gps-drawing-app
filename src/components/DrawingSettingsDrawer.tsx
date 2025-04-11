@@ -42,7 +42,7 @@ export default function DrawingSettingsDrawer({
     <>
       <Drawer>
         <DrawerTrigger>
-          <div className="w-10 h-10 flex items-center justify-center hover:bg-opacity-80 transition-colors cursor-pointer">
+          <div className="w-8 h-8 flex items-center justify-center hover:bg-opacity-80 transition-colors cursor-pointer">
             <NotepadTextIcon
               className={`w-5 h-5 ${
                 isDirty.title || isDirty.description

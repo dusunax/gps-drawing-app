@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import GPSDrawingApp from "@/components/GPSDrawingApp";
-import Header from "@/components/Header";
 import DrawingSettingDrawer from "@/components/DrawingSettingsDrawer";
 import { randomDescription } from "@/utils/get-random-description";
+import HeaderWithNav from "@/components/HeaderWithNav";
 
 export default function Home() {
   const [title, setTitle] = useState("My GPS Drawing");
@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <>
-      <Header>
+      <HeaderWithNav>
         <DrawingSettingDrawer
           title={title}
           description={description}
@@ -25,7 +25,7 @@ export default function Home() {
           initialTitle={title}
           initialDescription={description}
         />
-      </Header>
+      </HeaderWithNav>
       <GPSDrawingApp drawingInputs={drawingInputs} />
     </>
   );
