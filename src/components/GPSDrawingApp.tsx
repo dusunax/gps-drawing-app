@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Navigation2, Images } from "lucide-react";
+import { Navigation2, Images, Save } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import MapComponent from "./MapComponent";
 import useGPS from "@/hooks/use-GPS";
@@ -191,8 +191,9 @@ const GPSDrawingApp = ({ drawingInputs }: { drawingInputs: DrawingInputs }) => {
             <div className="absolute inset-1 bg-dark-surface rounded-full"></div>
             <div
               className={`absolute inset-2 rounded-full transition-all duration-200
-              ${isRecording ? "bg-brand-primary" : "bg-text-secondary"}`}
+                ${isRecording ? "bg-brand-primary" : "bg-text-secondary"}`}
             ></div>
+            <Save className="w-6 h-6 text-dark-surface absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
           </button>
         </div>
       </div>

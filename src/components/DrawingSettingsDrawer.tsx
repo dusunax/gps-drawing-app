@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Save, Settings } from "lucide-react";
+import { CheckIcon, NotepadTextIcon } from "lucide-react";
 import {
   Drawer,
   DrawerContent,
@@ -43,7 +43,7 @@ export default function DrawingSettingsDrawer({
       <Drawer>
         <DrawerTrigger>
           <div className="w-10 h-10 flex items-center justify-center hover:bg-opacity-80 transition-colors cursor-pointer">
-            <Settings
+            <NotepadTextIcon
               className={`w-5 h-5 ${
                 isDirty.title || isDirty.description
                   ? "text-brand-primary"
@@ -54,11 +54,11 @@ export default function DrawingSettingsDrawer({
         </DrawerTrigger>
         <DrawerContent className="h-[50vh] px-8 pb-10 flex flex-col gap-4 bg-dark-surface border-text-secondary">
           <DrawerClose className="h-0 flex justify-end">
-            <Save className="w-5 h-5 text-text-secondary" />
+            <CheckIcon className="w-5 h-5 text-brand-primary" />
           </DrawerClose>
           <DrawerHeader>
             <DrawerTitle className="flex items-center justify-center gap-2">
-              <Settings className="w-5 h-5" />
+              <NotepadTextIcon className="w-5 h-5" />
               Drawing Settings
             </DrawerTitle>
             <DrawerDescription className="text-text-secondary text-center">
