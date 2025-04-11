@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Navigation2, ArrowDownToLine, Images, Loader } from "lucide-react";
+import { Navigation2, Images } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import MapComponent from "./MapComponent";
 import useGPS from "@/hooks/use-GPS";
@@ -60,7 +60,10 @@ const GPSDrawingApp = ({ drawingInputs }: { drawingInputs: DrawingInputs }) => {
           path={path}
           imageContainerRef={imageContainerRef}
         />
-        <div className="absolute top-4 right-4 flex items-center gap-2 bg-dark-surface bg-opacity-90 px-3 py-2 rounded-full">
+        <button
+          className="absolute top-4 right-4 flex items-center gap-2 bg-dark-surface bg-opacity-90 px-3 py-2 rounded-full"
+          onClick={() => setIsRecording(!isRecording)}
+        >
           <Navigation2
             className={`w-3 h-3 ${
               isGPSActive
@@ -77,7 +80,7 @@ const GPSDrawingApp = ({ drawingInputs }: { drawingInputs: DrawingInputs }) => {
                 : "Paused"
               : "No Signal"}
           </span>
-        </div>
+        </button>
 
         {/* Distance Card */}
         <div className="absolute top-4 left-4 bg-dark-surface bg-opacity-90 p-4 rounded-lg shadow-float">
@@ -171,11 +174,12 @@ const GPSDrawingApp = ({ drawingInputs }: { drawingInputs: DrawingInputs }) => {
           >
             <Images className="w-6 h-6" />
           </Link>
-
-          {/* Record Button */}
+          {/* Save Button */}
           <button
-            className="w-16 h-16 rounded-full relative shadow-button"
-            onClick={() => setIsRecording(!isRecording)}
+            className={`w-16 h-16 rounded-full relative shadow-button
+            ${isSaving ? "animate-pulse" : ""}`}
+            onClick={handleSaveButtonClick}
+            disabled={isSaving}
           >
             <span className="invisible">RECORD</span>
             <div
@@ -189,23 +193,6 @@ const GPSDrawingApp = ({ drawingInputs }: { drawingInputs: DrawingInputs }) => {
               className={`absolute inset-2 rounded-full transition-all duration-200
               ${isRecording ? "bg-brand-primary" : "bg-text-secondary"}`}
             ></div>
-          </button>
-
-          {/* Save Button */}
-          <button
-            className={`w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors
-            ${isSaving ? "!bg-text-disabled animate-spin" : ""}`}
-            onClick={handleSaveButtonClick}
-            disabled={isSaving}
-            style={{
-              animationDuration: "1.5s",
-            }}
-          >
-            {isSaving ? (
-              <Loader className="w-6 h-6" />
-            ) : (
-              <ArrowDownToLine className="w-6 h-6" />
-            )}
           </button>
         </div>
       </div>
