@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Navigation2, Images, Save } from "lucide-react";
+import { Navigation2, Save } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import MapComponent from "./MapComponent";
 import useGPS from "@/hooks/use-GPS";
 import useImageSaver from "@/hooks/use-image-saver";
 import Image from "next/image";
-import Link from "next/link";
 import { DrawingInputs } from "@/types/drawing";
 
 interface SavedImage {
@@ -165,15 +164,7 @@ const GPSDrawingApp = ({ drawingInputs }: { drawingInputs: DrawingInputs }) => {
         </div>
 
         {/* Control Buttons */}
-        <div className="flex justify-between items-center px-6">
-          {/* Reset Button */}
-          <Link
-            className={`w-16 h-16 rounded-full bg-dark-button flex items-center justify-center shadow-button hover:bg-opacity-80 transition-colors
-            ${!path.length ? "opacity-50" : ""}`}
-            href="/drawing-list"
-          >
-            <Images className="w-6 h-6" />
-          </Link>
+        <div className="flex justify-center items-center px-6">
           {/* Save Button */}
           <button
             className={`w-16 h-16 rounded-full relative shadow-button
