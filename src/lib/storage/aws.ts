@@ -1,5 +1,12 @@
 import AWS from "aws-sdk";
 import sharp from "sharp";
+import { IMAGE_CONFIG } from "@/constant/image-config";
+
+const {
+  CONTENT_TYPE: contentType,
+  EXTENSION: ext,
+  QUALITY: quality,
+} = IMAGE_CONFIG;
 
 const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
@@ -18,16 +25,16 @@ const uploadToS3 = async ({ imageFile, userId }: UploadToS3Props) => {
 
     const optimizedImage = await sharp(Buffer.from(buffer))
       .resize({ width: 1080 })
-      .webp({ quality: 80 })
+      .toFormat(ext, { quality })
       .toBuffer();
 
-    const fileName = `${userId}/${Date.now()}.jpg`;
+    const fileName = `${userId}/${Date.now()}.${IMAGE_CONFIG.EXTENSION}`;
 
     const params = {
       Bucket: process.env.AWS_S3_BUCKET_NAME!,
       Key: fileName,
       Body: optimizedImage,
-      ContentType: "image/jpeg",
+      ContentType: contentType,
     };
 
     const data = await s3.upload(params).promise();

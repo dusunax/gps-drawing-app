@@ -2,6 +2,9 @@ import { useState } from "react";
 import html2canvas from "html2canvas";
 import type { DrawingEnrich } from "@/types/drawing";
 import { toast } from "./use-toast";
+import { IMAGE_CONFIG } from "@/constant/image-config";
+
+const { CONTENT_TYPE: contentType, EXTENSION: ext } = IMAGE_CONFIG;
 
 interface UseImageSaverProps {
   imageContainerRef: React.RefObject<HTMLDivElement | null>;
@@ -32,7 +35,7 @@ const useImageSaver = ({
       const date = new Date().toISOString().split("T")[0];
       const link = document.createElement("a");
       link.href = imgUrl;
-      link.download = `${date}-${title}.png`;
+      link.download = `${date}-${title}.${ext}`;
       link.click();
     } catch (error) {
       console.error("🚨 Failed to save image locally", error);
@@ -46,7 +49,7 @@ const useImageSaver = ({
 
         try {
           const date = new Date().toISOString().split("T")[0];
-          const fileName = `${date}-map-drawing.png`;
+          const fileName = `${date}-map-drawing.${ext}`;
 
           const formData = new FormData();
           formData.append("image", blob, fileName);
@@ -67,7 +70,7 @@ const useImageSaver = ({
         } catch (error) {
           reject(error);
         }
-      }, "image/png");
+      }, contentType);
     });
   };
 
@@ -79,7 +82,7 @@ const useImageSaver = ({
       const canvas = await updateDrawingCanvas();
       if (!canvas) throw new Error("Failed to update drawing canvas");
 
-      const image = canvas.toDataURL("image/png");
+      const image = canvas.toDataURL(contentType);
       saveImageLocally(image, title);
 
       const data = await sendImageToServer(canvas);
@@ -93,7 +96,7 @@ const useImageSaver = ({
     } catch (error) {
       toast({
         title: "저장 실패",
-        description: "뭔가 실패했습니다",
+        description: "이미지 저장에 실패했습니다",
         duration: 2000,
         variant: "destructive",
       });
